@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <style>
+    #online_status {
+      color: green;
+    }
+
+    #online_status.offline {
+      color: red;
+    }
+  </style>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>控制面板</title>
+</head>
+
+<body>
+  <h1>设备控制面板</h1>
+  <p>在线状态：<span id="online_status" style=offline>{{ "在线" if online else "离线"
+      }}</span></p>
+
+
+  <button id="restart_button">重启</button>
+  <button id="power_on_button">开机</button>
+  <button id="sleep_button">睡眠</button>
+  <button id="shutdown_button">关机</button>
+  <button id="soft_shutdown_button">软关机</button>
+  <button id="soft_restart_button">软重启</button>
+
+  <script>
+    function updateOnlineStatus() {
+      fetch('/is_online')
+        .then(response => response.json())
+        .then(data => {
+          const onlineStatusElement = document.getElementById('online_status');
+          onlineStatusElement.innerText = data.online ? '在线' : '离线';
+          onlineStatusElement.classList.toggle('offline', !data.online);
+        });
+    }
+
+    function sendCommand(endpoint) {
+      fetch(`/${endpoint}`, {method: 'POST'})
+        .then(response => response.json())
+        .then(data => {
+          alert(data.message);
+        });
+    }
+
+    document.getElementById('restart_button').addEventListener('click', () => sendCommand('restart'));
+    document.getElementById('power_on_button').addEventListener('click', () => sendCommand('power_on'));
+    document.getElementById('sleep_button').addEventListener('click', () => sendCommand('sleep'));
+    document.getElementById('shutdown_button').addEventListener('click', () => sendCommand('shutdown'));
+    document.getElementById('soft_shutdown_button').addEventListener('click', () => sendCommand('soft_shutdown'));
+    document.getElementById('soft_restart_button').addEventListener('click', () => sendCommand('soft_restart'));
+
+    // 每10秒更新一次在线状态
+    setInterval(updateOnlineStatus, 10000);
+    updateOnlineStatus();
+  </script>
+</body>
+
+</html>
