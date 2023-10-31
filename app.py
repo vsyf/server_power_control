@@ -10,10 +10,9 @@
 """
 
 from flask import Flask, jsonify, request, render_template
-import time
-from worker import Worker
-from plugin.SSH_Plugin import SSH_Plugin
-from plugin.BootCard import BootCard
+from server_power_control.worker import Worker
+from server_power_control.plugin.SSH_Plugin import SSH_Plugin
+from server_power_control.plugin.BootCard import BootCard
 
 app = Flask(__name__)
 worker = Worker()

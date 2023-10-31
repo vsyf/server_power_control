@@ -9,7 +9,7 @@
 
 """
 
-from worker import PluginBase
+from server_power_control.worker import PluginBase
 import paramiko
 
 class SSH_Plugin(PluginBase):

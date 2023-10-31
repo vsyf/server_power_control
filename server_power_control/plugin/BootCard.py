@@ -9,7 +9,7 @@
 
 """
 
-from worker import PluginBase
+from server_power_control.worker import PluginBase
 import requests
 import json
 
