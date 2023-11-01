@@ -1,0 +1,12 @@
+version: '3'
+services:
+  server_power_control:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./control.env.bak:/app/control.env
+    environment:
+      - FLASK_APP=app.py
+      # Other environment variables if needed
+

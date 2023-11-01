@@ -9,15 +9,33 @@
 
 """
 
+import os
+import sys
+import dotenv
+
 from flask import Flask, jsonify, request, render_template
+
 from server_power_control.worker import Worker
 from server_power_control.plugin.SSH_Plugin import SSH_Plugin
 from server_power_control.plugin.BootCard import BootCard
 
+
+env_file_path = os.getenv('ENV_FILE_PATH', 'control.env')
+dotenv.load_dotenv(env_file_path)
+
+ssh_host = os.getenv('SSH_HOST', '192.168.253.149')
+ssh_port = int(os.getenv('SSH_PORT', 22))
+ssh_user = os.getenv('SSH_USER', 'shell')
+ssh_sudo_password = os.getenv('SSH_SUDO_PASSWORD', 'sudo_password')
+ssh_password = os.getenv('SSH_PASSWORD', 'ssh_password')
+bootcard_host = os.getenv('BOOTCARD_HOST', '192.168.253.107')
+
+#print ("env:", ssh_host, ssh_port, ssh_user, ssh_sudo_password, ssh_password, bootcard_host)
+
 app = Flask(__name__)
 worker = Worker()
-ssh = SSH_Plugin("192.168.253.149", 22,"root","sudo_password", "ssh_password")
-bootcard = BootCard("192.168.253.107")
+ssh = SSH_Plugin(ssh_host, 22, ssh_user, ssh_sudo_password, ssh_password)
+bootcard = BootCard(bootcard_host)
 worker.register_plugin("ssh",ssh)
 worker.register_plugin("bootcard",bootcard)
 
